@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    article{
+      border: 1px solid black;
+      margin: 10px;
+      padding: 10px;
+    }
+  </style>
+  <title>Probar API</title>
+  <scripttype="module">
+    fetch(http://localhost:1234/peliculas)
+    .then(res => res.json())
+    .then(peliculas =>{
+      const html = peliculas.map(pelicula => {
+        return `
+        <article data-id>
+            h2>${pelicula.titulo}</h2>
+            <p>${pelicula.director}</p>
+        </article> `
+
+        
+         
+      }).join('');
+      document.querySelector('main').innerHTML = html;
+        
+    });
+  </script>   
+</head>
+<body>
+
+</body>
+</html>

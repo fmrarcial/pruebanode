@@ -1,0 +1,43 @@
+### Recuperar todas las películas
+GET http://localhost:1234/peliculas
+
+
+### Recuperar una película por ID
+GET http://localhost:1234/peliculas/1
+
+
+### Recuperar películas por género
+GET http://localhost:1234/peliculas?clasificacion=Acción
+
+
+### Crear una película
+POST http://localhost:1234/peliculas
+Content-Type: application/json
+
+{
+  "nombre": "Avengers: Endgame",
+  "director": "Anthony Russo, Joe Russo",
+  "clasificacion": "Acción",
+  "anio": 2019
+}
+
+
+### Actualizar una película completa
+PUT http://localhost:1234/peliculas/1
+Content-Type: application/json
+
+{
+  "nombre": "Avengers: Endgame",
+  "director": "Anthony Russo, Joe Russo",
+  "clasificacion": "Acción",
+  "anio": 2019
+}
+
+
+### Actualizar parcialmente una película
+PATCH http://localhost:1234/peliculas/1
+Content-Type: application/json
+
+{
+  "anio": 2020
+}
