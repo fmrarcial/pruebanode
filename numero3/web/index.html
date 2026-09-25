@@ -1,36 +1,290 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    article{
-      border: 1px solid black;
-      margin: 10px;
-      padding: 10px;
-    }
-  </style>
-  <title>Probar API</title>
-  <scripttype="module">
-    fetch(http://localhost:1234/peliculas)
-    .then(res => res.json())
-    .then(peliculas =>{
-      const html = peliculas.map(pelicula => {
-        return `
-        <article data-id>
-            h2>${pelicula.titulo}</h2>
-            <p>${pelicula.director}</p>
-        </article> `
+<html lang="es">
 
-        
-         
-      }).join('');
-      document.querySelector('main').innerHTML = html;
-        
-    });
-  </script>   
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Películas</title>
+
+  <style>
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      padding: 20px;
+    }
+
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    article {
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      background-color: white;
+      margin: 20px 0;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    article img {
+      display: block;
+      width: 250px;
+      height: 350px;
+      object-fit: cover;
+      margin: 0 auto 20px auto;
+      border-radius: 8px;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    p {
+      text-align: center;
+      margin: 8px 0;
+    }
+
+    button {
+      display: block;
+      margin: 20px auto 0;
+      padding: 10px 20px;
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #c0392b;
+    }
+
+  </style>
+
 </head>
+
 <body>
 
+  <main>
+    <p>Cargando películas...</p>
+  </main>
+
+
+  <script>
+
+    const API_URL = "http://localhost:1234/peliculas";
+
+
+    // ==========================================
+    // GET - Obtener películas
+    // ==========================================
+
+    function cargarPeliculas() {
+
+      fetch(API_URL)
+
+        .then(res => {
+
+          if (!res.ok) {
+            throw new Error(
+              `Error HTTP: ${res.status}`
+            );
+          }
+
+          return res.json();
+
+        })
+
+        .then(peliculas => {
+
+          const main =
+            document.querySelector("main");
+
+          if (peliculas.length === 0) {
+
+            main.innerHTML = `
+              <p>No hay películas disponibles.</p>
+            `;
+
+            return;
+          }
+
+
+          const html = peliculas.map(
+            pelicula => {
+
+              return `
+                <article data-id="${pelicula.id}">
+
+                  <img
+                    src="${pelicula.imagen}"
+                    alt="Portada de ${pelicula.nombre}"
+                  >
+
+                  <h2>
+                    ${pelicula.nombre}
+                  </h2>
+
+                  <p>
+                    <strong>Director:</strong>
+                    ${pelicula.director}
+                  </p>
+
+                  <p>
+                    <strong>
+                      Clasificación:
+                    </strong>
+                    ${pelicula.clasificacion}
+                  </p>
+
+                  <p>
+                    <strong>Año:</strong>
+                    ${pelicula.anio}
+                  </p>
+
+                  <p>
+                    <strong>Duración:</strong>
+                    ${pelicula.duracion}
+                    minutos
+                  </p>
+
+                  <button
+                    class="btn-eliminar"
+                  >
+                    Eliminar
+                  </button>
+
+                </article>
+              `;
+
+            }
+          ).join("");
+
+
+          main.innerHTML = html;
+
+        })
+
+        .catch(error => {
+
+          console.error(
+            "Error al obtener películas:",
+            error
+          );
+
+          document.querySelector(
+            "main"
+          ).innerHTML = `
+            <p>
+              No se pudieron cargar las películas.
+            </p>
+          `;
+
+        });
+
+    }
+
+
+    // ==========================================
+    // DELETE - Eliminar película
+    // ==========================================
+
+    document.addEventListener(
+      "click",
+      event => {
+
+        if (
+          !event.target.matches(
+            ".btn-eliminar"
+          )
+        ) {
+          return;
+        }
+
+
+        const article =
+          event.target.closest("article");
+
+
+        const id =
+          article.dataset.id;
+
+
+        const confirmar = confirm(
+          "¿Seguro que quieres eliminar esta película?"
+        );
+
+
+        if (!confirmar) {
+          return;
+        }
+
+
+        fetch(
+          `${API_URL}/${id}`,
+          {
+            method: "DELETE"
+          }
+        )
+
+          .then(res => {
+
+            if (!res.ok) {
+
+              return res.json().then(data => {
+                throw new Error(
+                  data.message ||
+                  "No se pudo eliminar la película"
+                );
+              });
+
+            }
+
+            return res.json();
+
+          })
+
+          .then(data => {
+
+            console.log(data);
+
+            // Eliminar del HTML
+            article.remove();
+
+          })
+
+          .catch(error => {
+
+            console.error(
+              "Error al eliminar:",
+              error
+            );
+
+            alert(error.message);
+
+          });
+
+      }
+    );
+
+
+    // ==========================================
+    // Cargar películas al iniciar
+    // ==========================================
+
+    cargarPeliculas();
+
+  </script>
+
 </body>
+
 </html>

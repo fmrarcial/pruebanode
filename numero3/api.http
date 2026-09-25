@@ -18,7 +18,9 @@ Content-Type: application/json
   "nombre": "Avengers: Endgame",
   "director": "Anthony Russo, Joe Russo",
   "clasificacion": "Acción",
-  "anio": 2019
+  "anio": 2019,
+  "duracion": 181,
+  "imagen": "https://image.tmdb.org/t/p/w500/ulzhLSmN7eGxXqW4b4M5F0L.jpg"
 }
 
 
@@ -30,7 +32,9 @@ Content-Type: application/json
   "nombre": "Avengers: Endgame",
   "director": "Anthony Russo, Joe Russo",
   "clasificacion": "Acción",
-  "anio": 2019
+  "anio": 2019,
+  "duracion": 181,
+  "imagen": "https://image.tmdb.org/t/p/w500/ulzhLSmN7eGxXqW4b4M5F0L.jpg"
 }
 
 
@@ -40,4 +44,22 @@ Content-Type: application/json
 
 {
   "anio": 2020
+}
+
+
+### Actualizar la duración
+PATCH http://localhost:1234/peliculas/1
+Content-Type: application/json
+
+{
+  "duracion": 180
+}
+
+
+### Actualizar la imagen
+PATCH http://localhost:1234/peliculas/1
+Content-Type: application/json
+
+{
+  "imagen": "https://ejemplo.com/nueva-imagen.jpg"
 }
