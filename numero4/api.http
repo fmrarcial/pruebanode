@@ -3,7 +3,7 @@ GET http://localhost:1234/peliculas
 
 
 ### Recuperar una película por ID
-GET http://localhost:1234/peliculas/1
+GET http://localhost:1234/peliculas/5
 
 
 ### Recuperar películas por género
@@ -15,7 +15,7 @@ POST http://localhost:1234/peliculas
 Content-Type: application/json
 
 {
-  "nombre": "Avengers: Endgame",
+  "nombre": "Avengers: Endgamo",
   "director": "Anthony Russo, Joe Russo",
   "clasificacion": "Acción",
   "anio": 2019,
@@ -25,12 +25,12 @@ Content-Type: application/json
 
 
 ### Actualizar una película completa
-PUT http://localhost:1234/peliculas/1
+PUT http://localhost:1234/peliculas/2
 Content-Type: application/json
 
 {
-  "nombre": "Avengers: Endgame",
-  "director": "Anthony Russo, Joe Russo",
+  "nombre": "Avengers: EndgamMMe",
+  "director": "Anthony Russo, JAoe Russo",
   "clasificacion": "Acción",
   "anio": 2019,
   "duracion": 181,
@@ -39,11 +39,11 @@ Content-Type: application/json
 
 
 ### Actualizar parcialmente una película
-PATCH http://localhost:1234/peliculas/1
+PATCH http://localhost:1234/peliculas/2
 Content-Type: application/json
 
 {
-  "anio": 2020
+  "anio": 2023
 }
 
 
@@ -63,3 +63,7 @@ Content-Type: application/json
 {
   "imagen": "https://ejemplo.com/nueva-imagen.jpg"
 }
+
+###BORRAR PELICULA
+
+DELETE http://localhost:1234/peliculas/5

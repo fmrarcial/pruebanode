@@ -1,71 +1,22 @@
 import { Router } from "express";
-import { readJSON } from "../utils.js";
-
-const peliculas = readJSON("./peliculas.json");
+import { PeliculaController } from "../controladores/pelicula.js";
 
 export const peliculaRouter = Router();
 
-peliculaRouter.get("/", (req, res) => {
-  const { clasificacion } = req.query;
-  if (clasificacion) {
-    const filteredPeliculas = peliculas.filter((pelicula) =>
-      pelicula.clasificacion.some(
-        (c) => c.toLowerCase() === clasificacion.toLowerCase(),
-      ),
-    );
-    return res.json(filteredPelicula);
-  }
-  res.json(peliculas);
-});
+// GET /peliculas
+peliculaRouter.get("/", PeliculaController.getAll);
 
-peliculaRouter.get("/:id", (req, res) => {
-  const { id } = req.params;
-  const pelicula = peliculas.find((pelicula) => pelicula.id === id);
-  if (pelicula) return res.json(pelicula);
-  res.status(404).json({ message: "pelicula no disponible" });
-});
+// POST /peliculas
+peliculaRouter.post("/", PeliculaController.create);
 
-peliculaRouter.delete("/peliculas/:id", (req, res) => {
-  const id = req.params.id;
+// GET /peliculas/:id
+peliculaRouter.get("/:id", PeliculaController.getById);
 
-  const peliculaIndex = peliculas.findIndex((pelicula) => pelicula.id === id);
+// PUT /peliculas/:id
+peliculaRouter.put("/:id", PeliculaController.update);
 
-  if (peliculaIndex === -1) {
-    return res.status(404).json({
-      error: "Película no encontrada",
-    });
-  }
+// PATCH /peliculas/:id
+peliculaRouter.patch("/:id", PeliculaController.update);
 
-  peliculas.splice(peliculaIndex, 1);
-
-  res.json({
-    message: "Película eliminada correctamente",
-  });
-});
-
-peliculaRouter.patch("/peliculas/:id", (req, res) => {
-  const id = req.params.id;
-
-  const peliculaIndex = peliculas.findIndex((pelicula) => pelicula.id === id);
-
-  if (peliculaIndex === -1) {
-    return res.status(404).json({
-      error: "Película no encontrada",
-    });
-  }
-
-  const result = validatePartialPelicula(req.body);
-
-  if (!result.success) {
-    return res.status(400).json({
-      error: result.error.issues,
-    });
-  }
-
-  peliculas[peliculaIndex] = {
-    ...peliculas[peliculaIndex],
-    ...result.data,
-  };
-
-  res.json(peliculas[peliculaIndex]);
-});
+// DELETE /peliculas/:id
+peliculaRouter.delete("/:id", PeliculaController.delete);
