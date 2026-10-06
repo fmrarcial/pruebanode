@@ -4,6 +4,7 @@ import { readJSON } from "../utils.js";
 const { peliculas } = readJSON("./peliculas.json");
 
 export class PeliculaModel {
+  // GET - Obtener todas las películas
   static async getAll({ clasificacion }) {
     if (clasificacion) {
       return peliculas.filter(
@@ -15,6 +16,7 @@ export class PeliculaModel {
     return peliculas;
   }
 
+  // GET - Obtener película por ID
   static async getById({ id }) {
     const pelicula = peliculas.find(
       (pelicula) => String(pelicula.id) === String(id),
@@ -23,6 +25,7 @@ export class PeliculaModel {
     return pelicula;
   }
 
+  // POST - Crear película
   static async create({ input }) {
     const newPelicula = {
       id: randomUUID(),
@@ -34,6 +37,7 @@ export class PeliculaModel {
     return newPelicula;
   }
 
+  // DELETE - Eliminar película
   static async delete({ id }) {
     const peliculaIndex = peliculas.findIndex(
       (pelicula) => String(pelicula.id) === String(id),
@@ -48,6 +52,7 @@ export class PeliculaModel {
     return true;
   }
 
+  // PUT / PATCH - Actualizar película
   static async update({ id, input }) {
     const peliculaIndex = peliculas.findIndex(
       (pelicula) => String(pelicula.id) === String(id),

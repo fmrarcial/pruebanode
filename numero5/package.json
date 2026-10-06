@@ -1,0 +1,17 @@
+{
+  "name": "numero5",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "nodemon": "^3.1.14",
+    "picocolors": "^1.1.1",
+    "standard": "^17.1.2"
+  },
+  "description": ""
+}

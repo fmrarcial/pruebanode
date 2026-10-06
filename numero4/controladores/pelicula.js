@@ -1,92 +1,142 @@
-import { PeliculaModel } from "../modelos/basededato/peliculas.js";
+import { PeliculaModel } from "../modelos/pelicula.js";
 import {
   validatePelicula,
   validatePartialPelicula,
 } from "../shemas/peliculas.js";
 
 export class PeliculaController {
+  // GET /peliculas
   static async getAll(req, res) {
-    const { clasificacion } = req.query;
+    try {
+      const { clasificacion } = req.query;
 
-    const peliculas = await PeliculaModel.getAll({
-      clasificacion,
-    });
+      const peliculas = await PeliculaModel.getAll({
+        clasificacion,
+      });
 
-    res.json(peliculas);
+      return res.json(peliculas);
+    } catch (error) {
+      console.error("Error al obtener las películas:", error);
+
+      return res.status(500).json({
+        error: "Error al obtener las películas",
+        detalle: error.message,
+      });
+    }
   }
 
+  // GET /peliculas/:id
   static async getById(req, res) {
-    const { id } = req.params;
+    try {
+      const { id } = req.params;
 
-    const pelicula = await PeliculaModel.getById({
-      id,
-    });
+      const pelicula = await PeliculaModel.getById({
+        id,
+      });
 
-    if (pelicula) {
-      return res.json(pelicula);
+      if (pelicula) {
+        return res.json(pelicula);
+      }
+
+      return res.status(404).json({
+        message: "Pelicula not found",
+      });
+    } catch (error) {
+      console.error("Error al obtener la película:", error);
+
+      return res.status(500).json({
+        error: "Error al obtener la película",
+        detalle: error.message,
+      });
     }
-
-    return res.status(404).json({
-      message: "Pelicula not found",
-    });
   }
 
+  // POST /peliculas
   static async create(req, res) {
-    const result = validatePelicula(req.body);
+    try {
+      const result = validatePelicula(req.body);
 
-    if (!result.success) {
-      return res.status(400).json({
-        error: result.error.issues,
+      if (!result.success) {
+        return res.status(400).json({
+          error: result.error.issues,
+        });
+      }
+
+      const newPelicula = await PeliculaModel.create({
+        input: result.data,
+      });
+
+      return res.status(201).json(newPelicula);
+    } catch (error) {
+      console.error("Error al crear la película:", error);
+
+      return res.status(500).json({
+        error: "Error al crear la película",
+        detalle: error.message,
       });
     }
-
-    const newPelicula = await PeliculaModel.create({
-      input: result.data,
-    });
-
-    return res.status(201).json(newPelicula);
   }
 
+  // DELETE /peliculas/:id
   static async delete(req, res) {
-    const { id } = req.params;
+    try {
+      const { id } = req.params;
 
-    const result = await PeliculaModel.delete({
-      id,
-    });
+      const result = await PeliculaModel.delete({
+        id,
+      });
 
-    if (result === false) {
-      return res.status(404).json({
-        message: "Pelicula no encontrada",
+      if (result === false) {
+        return res.status(404).json({
+          message: "Pelicula no encontrada",
+        });
+      }
+
+      return res.json({
+        message: "Pelicula eliminada",
+      });
+    } catch (error) {
+      console.error("Error al eliminar la película:", error);
+
+      return res.status(500).json({
+        error: "Error al eliminar la película",
+        detalle: error.message,
       });
     }
-
-    return res.json({
-      message: "Pelicula eliminada",
-    });
   }
 
+  // PUT / PATCH /peliculas/:id
   static async update(req, res) {
-    const { id } = req.params;
+    try {
+      const { id } = req.params;
 
-    const result = validatePartialPelicula(req.body);
+      const result = validatePartialPelicula(req.body);
 
-    if (!result.success) {
-      return res.status(400).json({
-        error: result.error.issues,
+      if (!result.success) {
+        return res.status(400).json({
+          error: result.error.issues,
+        });
+      }
+
+      const updatedPelicula = await PeliculaModel.update({
+        id,
+        input: result.data,
+      });
+
+      if (!updatedPelicula) {
+        return res.status(404).json({
+          message: "Pelicula no encontrada",
+        });
+      }
+
+      return res.json(updatedPelicula);
+    } catch (error) {
+      console.error("Error al actualizar la película:", error);
+
+      return res.status(500).json({
+        error: "Error al actualizar la película",
+        detalle: error.message,
       });
     }
-
-    const updatedPelicula = await PeliculaModel.update({
-      id,
-      input: result.data,
-    });
-
-    if (!updatedPelicula) {
-      return res.status(404).json({
-        message: "Pelicula no encontrada",
-      });
-    }
-
-    return res.json(updatedPelicula);
   }
 }

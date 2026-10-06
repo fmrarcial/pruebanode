@@ -1,5 +1,6 @@
-import { createRequire } from "node:module";
+import fs from "node:fs";
 
-const require = createRequire(import.meta.url);
-
-export const readJSON = (path) => require(path);
+export function readJSON(path) {
+  const data = fs.readFileSync(path, "utf-8");
+  return JSON.parse(data);
+}
